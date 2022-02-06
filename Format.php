@@ -435,4 +435,26 @@ class Nabo_Format
             'extra' => (string)$friend['extra'],
         ], 'Friend');
     }
+
+    /**
+     * @param $uid
+     * @return int
+     */
+    public static function create_words($uid)
+    {
+        $count = 0;
+        $query = [
+            'post_type' => 'post',
+            'numberposts' => 99999
+        ];
+
+        foreach (wp_get_recent_posts($query) as $row) {
+            if ($row['post_author'] == $uid) {
+                $count += mb_strlen($row['post_title'], 'UTF-8');
+                $count += mb_strlen($row['post_content'], 'UTF-8');
+            }
+        }
+
+        return $count;
+    }
 }

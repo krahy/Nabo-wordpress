@@ -224,20 +224,19 @@ class Nabo_Service
     }
 
     /**
-     * 统计
-     *
      * @param $data
-     * @return array|Exception
+     * @return array
      * @throws Exception
-     * @access public
      */
     public function metcip_kat_stat_pull($data)
     {
         $this->check_access();
 
-        return array(
-            'creative' => 0
-        );
+        return [
+            'creative' => Nabo_Format::create_words(
+                $this->liteuser->uid
+            )
+        ];
     }
 
     /**
@@ -273,9 +272,9 @@ class Nabo_Service
         );
 
         // meta
-//        if (is_numeric($data['meta'])) {
-//
-//        }
+        if (is_numeric($data['meta'])) {
+            $query['category'] = $data['meta'];
+        }
 
         // status
         switch ($status = $data['status'] ?: 'allow') {
@@ -381,8 +380,8 @@ class Nabo_Service
             'post_title' => $data['title'],
             'post_content' => $data['content'],
             'post_status' => Nabo_Format::note_status($data['status']),
-            'ping_status' => $data['allow_pings'] == 1 ? 'open' : 'closed',
-            'comment_status' => $data['allow_comments'] == 1 ? 'open' : 'closed'
+            'ping_status' => empty($data['allowPing']) ? 'closed' : 'open',
+            'comment_status' => empty($data['allowDisc']) ? 'closed' : 'open'
         );
 
         // nid
